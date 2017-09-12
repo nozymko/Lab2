@@ -33,8 +33,40 @@ public class SolveMaze {
          * You should be able to solve a 10 x 10 maze in (far fewer than) 1000 steps.
          * Feel free to adjust this number if you experiment with other mazes.
          */
+        boolean moved = false;
         for (int step = 0; step < 1000; step++) {
-            // Implement your maze solving algorithm here
+            //checks to see if there is a wall to the left and if there isn't a wall in front
+            if ((checkLeftWall(maze) == true) && (maze.canMove() == true) && (moved == false)) {
+                maze.move();
+                moved = true;
+            }
+            if (moved == false) { //checks if it can move left
+                maze.turnLeft();
+                if (maze.canMove() == true){
+                    maze.move();
+                    moved = true;
+                } else {
+                    maze.turnRight();
+                }
+            }
+            if (moved == false) { //checks if it can move right
+                maze.turnRight();
+                if (maze.canMove() == true) {
+                    maze.move();
+                    moved = true;
+                } else {
+                    maze.turnLeft();
+                }
+            }
+            if (moved == false) { //turns around if all else failed
+                maze.turnLeft();
+                maze.turnLeft();
+                moved = true;
+            }
+            moved = false;
+            if (maze.isFinished()) { //checks if the maze is done
+                break;
+            }
         }
 
         if (maze.isFinished()) {
@@ -43,4 +75,17 @@ public class SolveMaze {
             System.out.println("Try again!");
         }
     }
+
+    //checks to see if there is a wall to the left
+    public static boolean checkLeftWall(Maze maze) {
+        maze.turnLeft();
+        if (maze.canMove() == false) {
+            maze.turnRight();
+            return true;
+        } else {
+            maze.turnRight();
+            return false;
+        }
+    }
+
 }
